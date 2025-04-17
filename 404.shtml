@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 Error | Salman Educational Complex</title>
+
+    <!-- Favicon Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicons/favicon-16x16.png" />
+    <link rel="manifest" href="assets/images/favicons/site.webmanifest" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&amp;display=swap" rel="stylesheet">
+    <!-- Vazirmatn for Persian -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Vendor CSS -->
+    <link rel="stylesheet" href="assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/vendors/bootstrap-select/bootstrap-select.min.css" />
+    <link rel="stylesheet" href="assets/vendors/animate/animate.min.css" />
+    <link rel="stylesheet" href="assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="assets/vendors/jquery-ui/jquery-ui.css" />
+    <link rel="stylesheet" href="assets/vendors/jarallax/jarallax.css" />
+    <link rel="stylesheet" href="assets/vendors/jquery-magnific-popup/jquery.magnific-popup.css" />
+    <link rel="stylesheet" href="assets/vendors/tiny-slider/tiny-slider.css" />
+    <link rel="stylesheet" href="assets/vendors/salman-icons/style.css" />
+    
+    <!-- 404 Page CSS -->
+    <link rel="stylesheet" href="assets/css/pages/404-error.css" />
+</head>
+<body class="custom-cursor">
+    <div class="custom-cursor__cursor"></div>
+    <div class="custom-cursor__cursor-two"></div>
+    
+    <div class="page-wrapper">
+        <!-- Language Selector -->
+        <div class="error-language-selector">
+            <button type="button" class="lang-btn" data-lang="en">English</button>
+            <button type="button" class="lang-btn" data-lang="fa">فارسی</button>
+        </div>
+
+        <!-- 404 Error Content -->
+        <section class="error-404-center">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10 text-center">
+                        <!-- SVG Image -->
+                        <div class="error-404-svg">
+                            <img src="assets/images/404.svg" alt="404" class="error-svg-image">
+                        </div>
+                        
+                        <!-- English Content -->
+                        <div class="error-content" id="en-content">
+                            <h2 class="error-404-title">Oops, page not found!</h2>
+                            <p class="error-404-text">The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.</p>
+                            <a href="index.php?lang=en" class="error-404-btn">Back to Homepage</a>
+                        </div>
+                        
+                        <!-- Persian Content -->
+                        <div class="error-content" id="fa-content" style="display: none; direction: rtl;">
+                            <h2 class="error-404-title">اوپس، صفحه‌ای یافت نشد!</h2>
+                            <p class="error-404-text">صفحه‌ای که به دنبال آن هستید ممکن است حذف شده، نام آن تغییر کرده یا موقتاً در دسترس نباشد.</p>
+                            <a href="index.php?lang=fa" class="error-404-btn">بازگشت به صفحه اصلی</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Logo -->
+        <div class="error-footer">
+            <a href="#" id="footer-logo-link">
+                <img src="assets/images/logo-dark.png" alt="Salman Educational Complex" class="error-footer-logo" id="footer-logo-en">
+                <img src="assets/images/farsi-logo.png" alt="مجتمع آموزشی سلمان" class="error-footer-logo" id="footer-logo-fa" style="display: none;">
+            </a>
+        </div>
+    </div>
+
+    <!-- Basic Scripts -->
+    <script src="assets/vendors/jquery/jquery-3.7.0.min.js"></script>
+    
+    <!-- 404 Page Specific JavaScript -->
+    <script src="assets/js/404-error.js"></script>
+</body>
+</html>

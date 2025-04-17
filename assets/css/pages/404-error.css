@@ -1,0 +1,233 @@
+/**
+ * 404 Error Page Styles
+ * Bilingual support (English/Persian)
+ * 
+ * @package Salman Educational Complex
+ * @version 1.0
+ */
+
+/* Main container styles */
+.error-404-center {
+    padding: 120px 0 80px;
+    display: flex;
+    align-items: flex-start;
+    min-height: 80vh;
+    position: relative;
+}
+
+/* SVG Image container */
+.error-404-svg {
+    margin-bottom: 35px;
+    display: inline-block;
+    animation: float 4s ease-in-out infinite;
+}
+
+/* Animation for floating effect */
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-15px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+/* SVG Image sizing */
+.error-svg-image {
+    max-width: 100%;
+    height: auto;
+    width: 450px;
+}
+
+/* Error message title */
+.error-404-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #2c2c2c;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+/* Error message text */
+.error-404-text {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #666666;
+    margin-bottom: 35px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    transition: all 0.3s ease;
+}
+
+/* Button styles */
+.error-404-btn {
+    font-family: 'Vazir';
+    display: inline-block;
+    background-color: #6461FC;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 14px 40px;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: 0 10px 25px rgba(100, 97, 252, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.error-404-btn:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(-100%) scale(0.5);
+    opacity: 0;
+    border-radius: 30px;
+    transition: all 0.4s ease;
+}
+
+.error-404-btn:hover {
+    background-color: #483AAD;
+    color: #ffffff;
+    transform: translateY(-3px);
+}
+
+.error-404-btn:hover:before {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+}
+
+/* Persian typography adjustments */
+[dir="rtl"] .error-404-title,
+[dir="rtl"] .error-404-text {
+    font-family: 'Vazirmatn', sans-serif;
+}
+
+/* Language Selector */
+.error-language-selector {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    z-index: 100;
+    display: flex;
+    gap: 10px;
+}
+
+.lang-btn {
+    font-family: 'Vazir';
+    padding: 8px 15px;
+    border-radius: 20px;
+    border: 1px solid #e0e0e0;
+    background-color: #fff;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.lang-btn:hover {
+    border-color: #6461FC;
+    color: #6461FC;
+}
+
+.lang-btn.active {
+    background-color: #6461FC;
+    color: #fff;
+    border-color: #6461FC;
+}
+
+/* Footer logo */
+.error-footer {
+    position: absolute;
+    bottom: 40px;
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+
+.error-footer-logo {
+    max-width: 150px;
+    height: auto;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.error-footer-logo:hover {
+    opacity: 1;
+}
+
+/* RTL adjustments for language selector */
+html[dir="rtl"] .error-language-selector {
+    right: auto;
+    left: 30px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+    .error-404-center {
+        padding: 100px 0 60px;
+        min-height: 70vh;
+    }
+    
+    .error-svg-image {
+        width: 380px;
+    }
+    
+    .error-footer {
+        position: relative;
+        padding: 30px 0;
+        bottom: auto;
+    }
+}
+
+@media (max-width: 767px) {
+    .error-404-center {
+        padding: 80px 0 40px;
+        min-height: auto;
+    }
+    
+    .error-svg-image {
+        width: 300px;
+    }
+    
+    .error-404-title {
+        font-size: 28px;
+    }
+    
+    .error-404-text {
+        font-size: 15px;
+    }
+    
+    .error-language-selector {
+        top: 20px;
+        right: 20px;
+    }
+    
+    html[dir="rtl"] .error-language-selector {
+        right: auto;
+        left: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .error-svg-image {
+        width: 250px;
+    }
+    
+    .error-404-title {
+        font-size: 24px;
+    }
+    
+    .error-404-btn {
+        padding: 12px 30px;
+        font-size: 14px;
+    }
+}
