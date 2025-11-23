@@ -1,0 +1,398 @@
+<?php
+/**
+ * مدیریت ساعات کاری - مستقل از متغیر $lang
+ */
+
+// Load configuration
+require_once '../includes/config.php';
+
+// Database connection
+$db = connectDB();
+
+// Message for form status
+$message = '';
+$message_type = '';
+
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+    if ($_POST['action'] === 'save_working_hours') {
+        try {
+            // Get form data
+            $days_start = isset($_POST['days_start']) ? (int)$_POST['days_start'] : 1;
+            $days_end = isset($_POST['days_end']) ? (int)$_POST['days_end'] : 4;
+            $weekday_start = isset($_POST['weekday_start']) ? $_POST['weekday_start'] : '7:00';
+            $weekday_end = isset($_POST['weekday_end']) ? $_POST['weekday_end'] : '14:00';
+            $friday_start = isset($_POST['friday_start']) ? $_POST['friday_start'] : '7:00';
+            $friday_end = isset($_POST['friday_end']) ? $_POST['friday_end'] : '12:00';
+            $friday_open = isset($_POST['friday_open']) ? 1 : 0;
+            $weekend_open = isset($_POST['weekend_open']) ? 1 : 0;
+            
+            // Update core_config table
+            updateConfig('working_days_start', $days_start);
+            updateConfig('working_days_end', $days_end);
+            updateConfig('working_hours_weekdays_start', $weekday_start);
+            updateConfig('working_hours_weekdays_end', $weekday_end);
+            updateConfig('working_hours_friday_start', $friday_start);
+            updateConfig('working_hours_friday_end', $friday_end);
+            updateConfig('working_friday_open', $friday_open);
+            updateConfig('working_weekend_open', $weekend_open);
+            
+            $message = "ساعات کاری با موفقیت ذخیره شد!";
+            $message_type = "success";
+        } catch (Exception $e) {
+            $message = "خطا: " . $e->getMessage();
+            $message_type = "error";
+        }
+    }
+}
+
+// Function to update config
+function updateConfig($key, $value) {
+    global $db;
+    
+    $stmt = $db->prepare("INSERT INTO core_config (config_key, config_value, config_group) 
+                          VALUES (?, ?, 'working_hours') 
+                          ON DUPLICATE KEY UPDATE config_value = ?");
+    $stmt->bind_param("sss", $key, $value, $value);
+    return $stmt->execute();
+}
+
+// Function to get config value
+function getConfigAdmin($key, $default = '') {
+    global $db;
+    
+    $stmt = $db->prepare("SELECT config_value FROM core_config WHERE config_key = ? LIMIT 1");
+    $stmt->bind_param("s", $key);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        return $row['config_value'];
+    }
+    
+    return $default;
+}
+
+/**
+ * تابع نمایش ساعات کاری برای پیش‌نمایش
+ */
+function previewWorkingHours($days_start, $days_end, $weekday_start, $weekday_end, 
+                            $friday_start, $friday_end, $friday_open, $weekend_open, $lang = 'fa') {
+    // نام روزها در زبان‌های مختلف
+    $days_names = [
+        'fa' => ['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه', 'شنبه'],
+        'en' => ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+        'ar' => ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت']
+    ];
+    
+    // انتخاب زبان
+    $lang = isset($days_names[$lang]) ? $lang : 'fa';
+    $day_names = $days_names[$lang];
+    
+    // تنظیم کلمات کلیدی بر اساس زبان
+    $from_to = ($lang === 'en') ? "%s: %s to %s" : "%s: %s تا %s";
+    $closed = ($lang === 'en') ? "Closed" : "تعطیل";
+    $and = ($lang === 'en') ? " & " : " و ";
+    
+    // تبدیل فرمت زمان
+    $format_time = function($time) use ($lang) {
+        if ($lang === 'en') {
+            // تبدیل به فرمت AM/PM
+            $parts = explode(':', $time);
+            $hour = (int)$parts[0];
+            $minute = isset($parts[1]) ? $parts[1] : '00';
+            
+            $suffix = ($hour >= 12) ? 'PM' : 'AM';
+            $hour = ($hour > 12) ? $hour - 12 : $hour;
+            $hour = ($hour == 0) ? 12 : $hour;
+            
+            return $hour . ':' . $minute . ' ' . $suffix;
+        }
+        
+        // برای فارسی و عربی همان فرمت اصلی استفاده می‌شود
+        return $time;
+    };
+    
+    // ساخت متن ساعات کاری
+    $output = '';
+    
+    // روزهای هفته
+    if ($days_start <= $days_end) {
+        $day_start_name = $day_names[$days_start];
+        $day_end_name = $day_names[$days_end];
+        
+        $day_range = ($lang === 'en') ? 
+            "$day_start_name to $day_end_name" : 
+            "$day_start_name تا $day_end_name";
+        
+        $formatted_start = $format_time($weekday_start);
+        $formatted_end = $format_time($weekday_end);
+        
+        $output .= sprintf($from_to, $day_range, $formatted_start, $formatted_end) . "\n";
+    }
+    
+    // جمعه
+    $friday_name = $day_names[5]; // index 5 is Friday
+    if ($friday_open) {
+        $formatted_start = $format_time($friday_start);
+        $formatted_end = $format_time($friday_end);
+        
+        $output .= sprintf($from_to, $friday_name, $formatted_start, $formatted_end) . "\n";
+    } else {
+        $output .= "$friday_name: $closed\n";
+    }
+    
+    // آخر هفته (شنبه و یکشنبه)
+    if (!$weekend_open) {
+        $output .= $day_names[6] . $and . $day_names[0] . ": $closed";
+    }
+    
+    return trim($output);
+}
+
+// Get current working hours settings
+$days_start = (int)getConfigAdmin('working_days_start', '1');
+$days_end = (int)getConfigAdmin('working_days_end', '4');
+$weekday_start = getConfigAdmin('working_hours_weekdays_start', '7:00');
+$weekday_end = getConfigAdmin('working_hours_weekdays_end', '14:00');
+$friday_start = getConfigAdmin('working_hours_friday_start', '7:00');
+$friday_end = getConfigAdmin('working_hours_friday_end', '12:00');
+$friday_open = (bool)getConfigAdmin('working_friday_open', '1');
+$weekend_open = (bool)getConfigAdmin('working_weekend_open', '0');
+
+// Day names
+$days = ['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه', 'شنبه'];
+?>
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدیریت ساعات کاری</title>
+    <style>
+        body {
+            font-family: Tahoma, Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .message {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        form {
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: Tahoma, Arial, sans-serif;
+        }
+        .checkbox-group {
+            margin-top: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: Tahoma, Arial, sans-serif;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .preview {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .preview h3 {
+            margin-top: 0;
+        }
+        .preview-content {
+            white-space: pre-line;
+        }
+        .time-inputs {
+            display: flex;
+            gap: 10px;
+        }
+        .time-inputs input {
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>مدیریت ساعات کاری</h1>
+        
+        <?php if (!empty($message)): ?>
+            <div class="message <?php echo $message_type; ?>">
+                <?php echo $message; ?>
+            </div>
+        <?php endif; ?>
+        
+        <form method="post" action="">
+            <div class="form-group">
+                <label>روزهای کاری هفته:</label>
+                <div class="time-inputs">
+                    <div>
+                        <label for="days_start">از روز:</label>
+                        <select id="days_start" name="days_start">
+                            <?php for ($i = 0; $i < 7; $i++): ?>
+                                <option value="<?php echo $i; ?>" <?php echo ($days_start == $i) ? 'selected' : ''; ?>>
+                                    <?php echo $days[$i]; ?>
+                                </option>
+                            <?php endfor; ?>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="days_end">تا روز:</label>
+                        <select id="days_end" name="days_end">
+                            <?php for ($i = 0; $i < 7; $i++): ?>
+                                <option value="<?php echo $i; ?>" <?php echo ($days_end == $i) ? 'selected' : ''; ?>>
+                                    <?php echo $days[$i]; ?>
+                                </option>
+                            <?php endfor; ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>ساعات کاری روزهای عادی:</label>
+                <div class="time-inputs">
+                    <div>
+                        <label for="weekday_start">از ساعت:</label>
+                        <input type="text" id="weekday_start" name="weekday_start" value="<?php echo $weekday_start; ?>" placeholder="7:00">
+                    </div>
+                    
+                    <div>
+                        <label for="weekday_end">تا ساعت:</label>
+                        <input type="text" id="weekday_end" name="weekday_end" value="<?php echo $weekday_end; ?>" placeholder="14:00">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>ساعات کاری جمعه:</label>
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" name="friday_open" <?php echo $friday_open ? 'checked' : ''; ?>>
+                        جمعه‌ها باز هستیم
+                    </label>
+                </div>
+                
+                <div class="time-inputs">
+                    <div>
+                        <label for="friday_start">از ساعت:</label>
+                        <input type="text" id="friday_start" name="friday_start" value="<?php echo $friday_start; ?>" placeholder="7:00">
+                    </div>
+                    
+                    <div>
+                        <label for="friday_end">تا ساعت:</label>
+                        <input type="text" id="friday_end" name="friday_end" value="<?php echo $friday_end; ?>" placeholder="12:00">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" name="weekend_open" <?php echo $weekend_open ? 'checked' : ''; ?>>
+                        شنبه و یکشنبه هم باز هستیم
+                    </label>
+                </div>
+            </div>
+            
+            <button type="submit" name="action" value="save_working_hours">ذخیره ساعات کاری</button>
+        </form>
+        
+        <div class="preview">
+            <h3>پیش‌نمایش ساعات کاری در زبان‌های مختلف</h3>
+            
+            <h4>فارسی:</h4>
+            <div class="preview-content">
+                <?php echo nl2br(previewWorkingHours($days_start, $days_end, $weekday_start, $weekday_end, $friday_start, $friday_end, $friday_open, $weekend_open, 'fa')); ?>
+            </div>
+            
+            <h4>انگلیسی:</h4>
+            <div class="preview-content">
+                <?php echo nl2br(previewWorkingHours($days_start, $days_end, $weekday_start, $weekday_end, $friday_start, $friday_end, $friday_open, $weekend_open, 'en')); ?>
+            </div>
+            
+            <h4>عربی:</h4>
+            <div class="preview-content">
+                <?php echo nl2br(previewWorkingHours($days_start, $days_end, $weekday_start, $weekday_end, $friday_start, $friday_end, $friday_open, $weekend_open, 'ar')); ?>
+            </div>
+        </div>
+
+        <h3>راهنما</h3>
+        <p>
+            در این صفحه می‌توانید ساعات کاری را تنظیم کنید:
+        </p>
+        <ul>
+            <li>روزهای کاری هفته را مشخص کنید (مثلاً دوشنبه تا پنج‌شنبه)</li>
+            <li>ساعات کاری روزهای عادی را به صورت "ساعت:دقیقه" وارد کنید (مثلاً 7:00 یا 14:30)</li>
+            <li>تنظیم کنید که آیا جمعه‌ها باز هستید یا نه، و اگر باز هستید، ساعات کاری را مشخص کنید</li>
+            <li>تنظیم کنید که آیا شنبه و یکشنبه هم باز هستید یا نه</li>
+        </ul>
+        <p>
+            این تنظیمات به صورت خودکار در همه زبان‌ها (فارسی، انگلیسی و عربی) نمایش داده می‌شوند.
+        </p>
+    </div>
+</body>
+</html>
+<?php
+// Close database connection
+try {
+    if ($db) {
+        if (function_exists('closeDB')) {
+            closeDB($db);
+        } else {
+            $db->close();
+        }
+    }
+} catch (Exception $e) {
+    // Ignore
+}
+?>

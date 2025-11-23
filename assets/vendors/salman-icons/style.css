@@ -1,0 +1,222 @@
+@font-face {
+  font-family: 'Flaticon';
+  src:  url('fonts/Flaticonfe88.eot?mtjj3a');
+  src:  url('fonts/Flaticonfe88.eot?mtjj3a#iefix') format('embedded-opentype'),
+    url('fonts/Flaticonfe88.ttf?mtjj3a') format('truetype'),
+    url('fonts/Flaticonfe88.woff?mtjj3a') format('woff'),
+    url('fonts/Flaticonfe88.svg?mtjj3a#Flaticon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="flaticon-"], [class*=" flaticon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'Flaticon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.flaticon-flaticon-long-down:before {
+  content: "\e901";
+}
+.flaticon-flaticon-long-up:before {
+  content: "\e902";
+}
+.flaticon-user:before {
+  content: "\e92c";
+}
+.flaticon-flaticon-arrow-left:before {
+  content: "\e93f";
+}
+.flaticon-flaticon-arrow-right:before {
+  content: "\e940";
+}
+.flaticon-app-development1:before {
+  content: "\e900";
+}
+.flaticon-bonding:before {
+  content: "\e903";
+}
+.flaticon-business:before {
+  content: "\e904";
+}
+.flaticon-cart:before {
+  content: "\e905";
+}
+.flaticon-check:before {
+  content: "\e906";
+}
+.flaticon-check-two:before {
+  content: "\e907";
+}
+.flaticon-client:before {
+  content: "\e908";
+}
+.flaticon-close:before {
+  content: "\e909";
+}
+.flaticon-code:before {
+  content: "\e90a";
+}
+.flaticon-comment:before {
+  content: "\e90b";
+}
+.flaticon-comments-icon:before {
+  content: "\e90c";
+}
+.flaticon-comment-three:before {
+  content: "\e90d";
+}
+.flaticon-consulting:before {
+  content: "\e90e";
+}
+.flaticon-database:before {
+  content: "\e90f";
+}
+.flaticon-define:before {
+  content: "\e910";
+}
+.flaticon-design:before {
+  content: "\e911";
+}
+.flaticon-double-arrow-right:before {
+  content: "\e912";
+}
+.flaticon-double-arrow-left:before {
+  content: "\e913";
+}
+.flaticon-email:before {
+  content: "\e914";
+}
+.flaticon-long-arrow-right:before {
+  content: "\e915";
+}
+.flaticon-long-arrow-left:before {
+  content: "\e916";
+}
+.flaticon-mail:before {
+  content: "\e917";
+}
+.flaticon-marketing:before {
+  content: "\e918";
+}
+.flaticon-media:before {
+  content: "\e919";
+}
+.flaticon-minus:before {
+  content: "\e91a";
+}
+.flaticon-mission:before {
+  content: "\e91b";
+}
+.flaticon-paper-plan:before {
+  content: "\e91c";
+}
+.flaticon-phone:before {
+  content: "\e91d";
+}
+.flaticon-plus:before {
+  content: "\e91e";
+}
+.flaticon-quote:before {
+  content: "\e91f";
+}
+.flaticon-quote-three:before {
+  content: "\e920";
+}
+.flaticon-quote-two:before {
+  content: "\e921";
+}
+.flaticon-search:before {
+  content: "\e922";
+}
+.flaticon-seo:before {
+  content: "\e923";
+}
+.flaticon-service:before {
+  content: "\e924";
+}
+.flaticon-share:before {
+  content: "\e925";
+}
+.flaticon-solution:before {
+  content: "\e926";
+}
+.flaticon-star:before {
+  content: "\e927";
+}
+.flaticon-tag:before {
+  content: "\e928";
+}
+.flaticon-team:before {
+  content: "\e929";
+}
+.flaticon-technology:before {
+  content: "\e92a";
+}
+.flaticon-time:before {
+  content: "\e92b";
+}
+.flaticon-user-two:before {
+  content: "\e92d";
+}
+.flaticon-website1:before {
+  content: "\e92e";
+}
+.flaticon-right-angle:before {
+  content: "\e92f";
+}
+.flaticon-left-angle:before {
+  content: "\e930";
+}
+.flaticon-arrow:before {
+  content: "\e931";
+}
+.flaticon-curved-arrow:before {
+  content: "\e932";
+}
+.flaticon-curved-arrow-up:before {
+  content: "\e933";
+}
+.flaticon-up-right-arrow:before {
+  content: "\e934";
+}
+.flaticon-up-left-arrow:before {
+  content: "\e935";
+}
+.flaticon-dots:before {
+  content: "\e936";
+}
+.flaticon-pin:before {
+  content: "\e937";
+}
+.flaticon-right-arrows:before {
+  content: "\e938";
+}
+.flaticon-left-arrows:before {
+  content: "\e939";
+}
+.flaticon-menu:before {
+  content: "\e93a";
+}
+.flaticon-website:before {
+  content: "\e93b";
+}
+.flaticon-app-development:before {
+  content: "\e93c";
+}
+.flaticon-sketch:before {
+  content: "\e93d";
+}
+.flaticon-telephone:before {
+  content: "\e93e";
+}
